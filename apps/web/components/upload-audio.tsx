@@ -1,0 +1,100 @@
+"use client";
+
+import { useState, useRef } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { supabase } from "@/lib/supabase";
+import { Upload, Mic, Loader2 } from "lucide-react";
+
+export function UploadAudio() {
+  const [isRecording, setIsRecording] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const queryClient = useQueryClient();
+
+  const uploadMutation = useMutation({
+    mutationFn: async (file: File) => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("Não autenticado");
+
+      const fileName = `${user.id}/${Date.now()}-${file.name}`;
+      const { error: uploadError } = await supabase.storage
+        .from("audio-uploads")
+        .upload(fileName, file);
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from("audio-uploads")
+        .getPublicUrl(fileName);
+
+      const { data: meeting, error: meetingError } = await supabase
+        .from("meetings")
+        .insert({
+          user_id: user.id,
+          title: file.name.replace(/\.[^/.]+$/, ""),
+          audio_url: publicUrl,
+          source: "upload",
+          started_at: new Date().toISOString(),
+        })
+        .select()
+        .single();
+      if (meetingError) throw meetingError;
+
+      // Trigger transcription
+      await fetch("/api/transcribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ meetingId: meeting.id, audioUrl: publicUrl }),
+      });
+
+      return meeting;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["meetings"] });
+    },
+  });
+
+  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (file) uploadMutation.mutate(file);
+  }
+
+  return (
+    <div className="rounded-xl border border-border bg-card p-6">
+      <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-4">
+        Nova reunião
+      </h2>
+      <div className="flex gap-3">
+        <button
+          onClick={() => fileInputRef.current?.click()}
+          disabled={uploadMutation.isPending}
+          className="flex-1 flex items-center justify-center gap-2 rounded-lg border border-border bg-secondary px-4 py-3 text-sm font-medium hover:bg-secondary/80 transition-colors disabled:opacity-50"
+        >
+          {uploadMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+          Upload de áudio
+        </button>
+        <button
+          onClick={() => setIsRecording(!isRecording)}
+          className={`flex-1 flex items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm font-medium transition-colors ${
+            isRecording
+              ? "bg-destructive text-white hover:bg-destructive/90"
+              : "border border-border bg-secondary hover:bg-secondary/80"
+          }`}
+        >
+          <Mic className="h-4 w-4" />
+          {isRecording ? "Parar gravação" : "Gravar agora"}
+        </button>
+      </div>
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="audio/*"
+        className="hidden"
+        onChange={handleFileChange}
+      />
+      {uploadMutation.isPending && (
+        <p className="mt-3 text-sm text-muted-foreground">
+          Processando áudio e gerando transcrição...
+        </p>
+      )}
+    </div>
+  );
+}
