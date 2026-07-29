@@ -1,4 +1,4 @@
-{
+{"packageManager": "npm@11.16.0",
   "name": "predador",
   "version": "0.1.0",
   "private": true,
