@@ -38,12 +38,11 @@ export function UploadAudio() {
         .single();
       if (meetingError) throw meetingError;
 
-      // Trigger transcription
-      await fetch("/api/transcribe", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ meetingId: meeting.id, audioUrl: publicUrl }),
+      // Transcrever e analisar via Edge Function (Groq Whisper + Llama)
+      const { error: processError } = await supabase.functions.invoke("process-meeting", {
+        body: { meetingId: meeting.id },
       });
+      if (processError) throw processError;
 
       return meeting;
     },
@@ -60,7 +59,7 @@ export function UploadAudio() {
   return (
     <div className="rounded-xl border border-border bg-card p-6">
       <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-4">
-        Nova reunião
+        Nova call
       </h2>
       <div className="flex gap-3">
         <button
@@ -93,6 +92,11 @@ export function UploadAudio() {
       {uploadMutation.isPending && (
         <p className="mt-3 text-sm text-muted-foreground">
           Processando áudio e gerando transcrição...
+        </p>
+      )}
+      {uploadMutation.isError && (
+        <p className="mt-3 text-sm text-destructive">
+          Erro ao processar call: {(uploadMutation.error as Error).message}
         </p>
       )}
     </div>

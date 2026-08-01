@@ -4,3 +4,14 @@ node_modules
 .env.*.local
 .next
 .turbo
+.vercel
+next-env.d.ts
+*.tsbuildinfo
+
+# Test/scratch outputs
+coach_reply.txt
+analise_completa.txt
+
+# Supabase CLI local state
+supabase/.temp
+supabase/.branches

@@ -30,7 +30,7 @@ export async function analyzeMeeting(transcription: string): Promise<any> {
   return JSON.parse(data.choices[0].message.content);
 }
 
-const SYSTEM_PROMPT_ANALYZE = `Você é um coach comercial sênior. Analise a transcrição da reunião e retorne um JSON com:
+const SYSTEM_PROMPT_ANALYZE = `Você é um coach comercial sênior. Analise a transcrição da call e retorne um JSON com:
 - summary: resumo em 3 parágrafos
 - sentiment: "positive", "neutral" ou "negative"
 - objections: array de objeções identificadas

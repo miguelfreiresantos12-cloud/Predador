@@ -1,7 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.43.0";
 
-const SYSTEM_PROMPT = `Você é um coach comercial sênior com 20 anos de experiência. Analise a transcrição da reunião de vendas e retorne um JSON estrito com:
+const SYSTEM_PROMPT = `Você é um coach comercial sênior com 20 anos de experiência. Analise a transcrição da call de vendas e retorne um JSON estrito com:
 
 {
   "summary": "resumo em português em 3 parágrafos",

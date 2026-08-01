@@ -1,6 +1,6 @@
 export const PROMPT_ANALYZE_MEETING = `Você é um coach comercial sênior com 20 anos de experiência treinando equipes de vendas de alta performance.
 
-Analise a transcrição da reunião de vendas e retorne um JSON estrito com a seguinte estrutura:
+Analise a transcrição da call de vendas e retorne um JSON estrito com a seguinte estrutura:
 
 {
   "summary": "Resumo em português em 3 parágrafos cobrindo: contexto, principais pontos discutidos, e resultado",
@@ -23,7 +23,7 @@ Analise a transcrição da reunião de vendas e retorne um JSON estrito com a se
   },
   "overall_score": 0-10,
   "feedback": {
-    "excellent": "O que foi excelente na reunião, com exemplos específicos",
+    "excellent": "O que foi excelente na call, com exemplos específicos",
     "improve": "O que precisa melhorar, com sugestões práticas",
     "next_steps": "Próximos passos recomendados pelo coach"
   }
@@ -80,7 +80,7 @@ Foque em:
 
 Responda em português, em JSON válido.`;
 
-export const PROMPT_MEMORY_EXTRACTION = `Analise a transcrição da reunião e extraia fatos importantes sobre o cliente que devem ser lembrados para futuras interações.
+export const PROMPT_MEMORY_EXTRACTION = `Analise a transcrição da call e extraia fatos importantes sobre o cliente que devem ser lembrados para futuras interações.
 
 Para cada fato, classifique o tipo:
 - fact: informação factual sobre o cliente/empresa

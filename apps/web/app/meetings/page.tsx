@@ -12,7 +12,7 @@ export default function MeetingsPage() {
       <Sidebar />
       <main className="flex-1 overflow-y-auto p-8">
         <header className="mb-8">
-          <h1 className="text-2xl font-semibold tracking-tight">Reuniões</h1>
+          <h1 className="text-2xl font-semibold tracking-tight">Calls</h1>
           <p className="text-muted-foreground text-sm mt-1">Histórico completo de atendimentos</p>
         </header>
         {isLoading ? (
