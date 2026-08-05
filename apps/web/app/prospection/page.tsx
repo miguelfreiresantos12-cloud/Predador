@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Sidebar } from "@/components/sidebar";
-import { LeadCard } from "@/components/lead-card";
+import { LeadRow } from "@/components/lead-row";
 import { useGenerateLeads } from "@/hooks/use-generate-leads";
 import { useLeads } from "@/hooks/use-leads";
 import { Loader2, Search } from "lucide-react";
@@ -98,8 +98,8 @@ export default function ProspectionPage() {
         {isLoading ? (
           <div className="flex justify-center py-12"><Loader2 className="h-8 w-8 animate-spin text-accent" /></div>
         ) : leads?.length ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {leads.map((lead) => <LeadCard key={lead.id} lead={lead} />)}
+          <div className="divide-y divide-border">
+            {leads.map((lead) => <LeadRow key={lead.id} lead={lead} />)}
           </div>
         ) : (
           <p className="text-sm text-muted-foreground">Nenhum lead gerado ainda.</p>
