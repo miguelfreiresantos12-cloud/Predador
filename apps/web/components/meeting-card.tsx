@@ -24,7 +24,7 @@ export function MeetingCard({ meeting }: { meeting: Meeting }) {
             <span className={`flex items-center gap-1 text-xs font-bold px-2 py-0.5 rounded-full ${
               score >= 8 ? "bg-positive/10 text-positive" :
               score >= 6 ? "bg-info/10 text-info" :
-              "bg-destructive/10 text-destructive"
+              "bg-danger/10 text-danger"
             }`}>
               <TrendingUp className="h-3 w-3" />{score}
             </span>
