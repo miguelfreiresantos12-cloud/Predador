@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Phone, Sparkles, FileText, Settings, LogOut } from "lucide-react";
+import { Home, Phone, Sparkles, Target, FileText, Settings, LogOut } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 
@@ -10,6 +10,7 @@ const nav = [
   { href: "/", label: "Dashboard", icon: Home },
   { href: "/meetings", label: "Calls", icon: Phone },
   { href: "/coach", label: "Coach IA", icon: Sparkles },
+  { href: "/prospection", label: "Prospecção", icon: Target },
   { href: "/reports", label: "Relatórios", icon: FileText },
   { href: "/settings", label: "Config", icon: Settings },
 ];
