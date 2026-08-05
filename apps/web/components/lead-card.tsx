@@ -1,13 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { Globe, Share2, Zap, TrendingUp } from "lucide-react";
+import { Globe, Share2, Zap, Phone, TrendingUp } from "lucide-react";
 
 interface Lead {
   id: string;
   name: string;
   website?: string;
   social?: string;
+  phone?: string;
   momento_gatilho?: string;
   fit_score?: number;
   notes?: string;
@@ -47,6 +48,9 @@ export function LeadCard({ lead }: { lead: Lead }) {
           )}
           {lead.social && (
             <span className="flex items-center gap-1"><Share2 className="h-3 w-3" />{lead.social}</span>
+          )}
+          {lead.phone && (
+            <span className="flex items-center gap-1"><Phone className="h-3 w-3" />{lead.phone}</span>
           )}
         </div>
         {lead.notes && (

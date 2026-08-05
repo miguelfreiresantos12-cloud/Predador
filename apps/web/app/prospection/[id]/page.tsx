@@ -4,7 +4,7 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import { useLead } from "@/hooks/use-lead";
 import { Sidebar } from "@/components/sidebar";
-import { Loader2, ArrowLeft, Calendar, MapPin, Tag, Globe, Share2, Zap } from "lucide-react";
+import { Loader2, ArrowLeft, Calendar, MapPin, Tag, Globe, Share2, Zap, Phone } from "lucide-react";
 
 export default function LeadDetailPage() {
   const { id } = useParams();
@@ -106,6 +106,10 @@ export default function LeadDetailPage() {
                 <div className="flex items-center gap-2">
                   <Share2 className="h-4 w-4 text-muted-foreground" />
                   <span className="text-muted-foreground">{lead.social || "Rede social não identificada"}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Phone className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-muted-foreground">{lead.phone || "Telefone não identificado"}</span>
                 </div>
               </div>
             </div>
