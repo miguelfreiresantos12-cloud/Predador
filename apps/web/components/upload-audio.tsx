@@ -5,6 +5,20 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { Upload, Mic, Loader2 } from "lucide-react";
 
+function sanitizeFileName(name: string): string {
+  const lastDot = name.lastIndexOf(".");
+  const base = lastDot > 0 ? name.slice(0, lastDot) : name;
+  const ext = lastDot > 0 ? name.slice(lastDot) : "";
+
+  const sanitizedBase = base
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "") // remove acentos (marcas diacríticas)
+    .replace(/\s+/g, "-") // espaços viram hífen
+    .replace(/[^a-zA-Z0-9._-]/g, ""); // mantém só letras, números, -, _ e .
+
+  return `${sanitizedBase}${ext}`;
+}
+
 export function UploadAudio() {
   const [isRecording, setIsRecording] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -15,7 +29,7 @@ export function UploadAudio() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("Não autenticado");
 
-      const fileName = `${user.id}/${Date.now()}-${file.name}`;
+      const fileName = `${user.id}/${Date.now()}-${sanitizeFileName(file.name)}`;
       const { error: uploadError } = await supabase.storage
         .from("audio-uploads")
         .upload(fileName, file);
