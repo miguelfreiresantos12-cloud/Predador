@@ -23,7 +23,7 @@ export default function MeetingDetailPage() {
             <span className="flex items-center gap-1"><Calendar className="h-4 w-4" />{new Date(meeting.started_at).toLocaleDateString("pt-BR")}</span>
             <span className="flex items-center gap-1"><Clock className="h-4 w-4" />{Math.floor(meeting.duration_seconds / 60)}min</span>
             <span className="flex items-center gap-1"><User className="h-4 w-4" />{meeting.client?.name || "Cliente"}</span>
-            <span className="flex items-center gap-1"><Building2 className="h-4 w-4" />{meeting.client?.company || "Empresa"}</span>
+            <span className="flex items-center gap-1"><Building2 className="h-4 w-4" />{meeting.client?.company?.name || "Empresa"}</span>
           </div>
         </header>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

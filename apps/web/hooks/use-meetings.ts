@@ -11,7 +11,7 @@ export function useMeetings() {
       if (!user) return [];
       const { data, error } = await supabase
         .from("meetings")
-        .select("*, evaluation:evaluations(*), client:clients(name, company)")
+        .select("*, evaluation:evaluations(*), client:clients(name, company:companies(name))")
         .eq("user_id", user.id)
         .order("started_at", { ascending: false });
       if (error) throw error;

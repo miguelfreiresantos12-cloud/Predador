@@ -9,7 +9,7 @@ export function useMeeting(id: string) {
     queryFn: async () => {
       const { data: meeting, error } = await supabase
         .from("meetings")
-        .select("*, client:clients(name, company)")
+        .select("*, client:clients(name, company:companies(name))")
         .eq("id", id)
         .single();
       if (error) throw error;
