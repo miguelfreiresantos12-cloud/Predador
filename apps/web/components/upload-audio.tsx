@@ -35,16 +35,15 @@ export function UploadAudio() {
         .upload(fileName, file);
       if (uploadError) throw uploadError;
 
-      const { data: { publicUrl } } = supabase.storage
-        .from("audio-uploads")
-        .getPublicUrl(fileName);
-
+      // audio-uploads é um bucket privado: guardamos o path do storage
+      // (não uma public URL, que não funcionaria e nem é o que
+      // process-meeting espera ao chamar storage.download()).
       const { data: meeting, error: meetingError } = await supabase
         .from("meetings")
         .insert({
           user_id: user.id,
           title: file.name.replace(/\.[^/.]+$/, ""),
-          audio_url: publicUrl,
+          audio_url: fileName,
           source: "upload",
           started_at: new Date().toISOString(),
         })
