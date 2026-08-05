@@ -110,13 +110,34 @@ Retorne em JSON: { "memories": [{"content": "...", "type": "..."}] }`;serve(asyn
 
     await supabase.from("meetings").update({ status: "transcribing" }).eq("id", meetingId);
 
-    // 2. Baixar o áudio do storage
+    // 2. Baixar o áudio do storage (com retry)
     const audioPath = meeting.audio_url;
-    const { data: audioFile, error: audioError } = await supabase.storage
-      .from("audio-uploads")
-      .download(audioPath);
+    console.log("DEBUG audioPath:", JSON.stringify(audioPath), "length:", audioPath?.length);
+
+    let audioFile = null;
+    let audioError = null;
+
+    for (let attempt = 1; attempt <= 4; attempt++) {
+      console.log(`DEBUG tentativa ${attempt}/4 de download do áudio`);
+
+      const result = await supabase.storage.from("audio-uploads").download(audioPath);
+      audioFile = result.data;
+      audioError = result.error;
+
+      if (!audioError && audioFile) {
+        console.log(`DEBUG tentativa ${attempt}/4: sucesso`);
+        break;
+      }
+
+      console.log(`DEBUG tentativa ${attempt}/4: falhou -`, JSON.stringify(audioError));
+
+      if (attempt < 4) {
+        await new Promise((r) => setTimeout(r, 2000));
+      }
+    }
 
     if (audioError || !audioFile) {
+      console.log("DEBUG audioError completo:", JSON.stringify(audioError));
       throw new Error("Erro ao baixar áudio: " + audioError?.message);
     }
 
